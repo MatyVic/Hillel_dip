@@ -22,12 +22,17 @@ class Person:
         self.death_date = self.parse_date(death_date)
 
     def __str__(self):
-        gender_str = "чоловік" if self.gender == "m" else "жінка" if self.gender == "f" else "невідомо"
-        age = self.age()
-        birth = f"Народився {self.birth_date.strftime('%d.%m.%Y')}" if self.gender == "m" else f"Народилася {self.birth_date.strftime('%d.%m.%Y')}"
-        death = f"Помер: {self.death_date.strftime('%d.%m.%Y')}" if self.death_date and self.gender == "m" else f"Вмерла: {self.death_date.strftime('%d.%m.%Y')}" if self.death_date else ""
-        return f"{self.name} {self.surname} {self.father_name},{self.doa} {age} років, {gender_str}. {birth}. {death}"
+        gender_str = "чоловік" if self.gender == "m" \
+            else "жінка" if self.gender == "f" else "невідомо"
 
+        birth = f"Народився {self.birth_date.strftime('%d.%m.%Y')}" if self.gender == "m" else f"Народилася {self.birth_date.strftime('%d.%m.%Y')}"
+        age = self.age()
+        death_str = ''
+        if self.doa == "dead":
+            death_str = "Помер" if self.gender == "m" else "Вмерла" if self.gender == "f" else "Помер(ла)"
+            death_str += f' {self.death_date.strftime('%d.%m.%Y')}'
+
+        return f"{self.name} {self.surname} {self.father_name},{age} {self.get_age_str(age)}, {gender_str}. {birth}. {death_str}"
 
     def age(self):
         if not self.birth_date:
@@ -55,16 +60,25 @@ class Person:
         except ValueError:
             return None
 
+    @staticmethod
+    def get_age_str(age):
+        if 11 <= age % 100 <= 14 or age % 10 == 0 or age % 10 >= 5:
+            return "років"
+            # Другий за частотою: "роки"
+        elif age % 10 in (2, 3, 4):
+            return "роки"
+            # Найрідший: "рік"
+        elif age % 10 == 1:
+            return "рік"
+
     @property
     def doa(self):
         return "dead" if self.death_date else "alive"
 
 
-p1 = Person('Victor', 'Chupryna', '6.10.91', 'Oleksandrovych', )
+if __name__ == '__main__':
+    p1 = Person('Victor', 'Chupryna', '6.10.91', 'Oleksandrovych', 'm')
+    p2 = Person('Evgeniia', 'Chupryna', '08/01/1949', 'Victor', 'f', '02/04/2017')
 
-print(p1.birth_date)
-print(p1.death_date)
-print(p1.doa)
-print(p1.gender)
-print(p1.age())
-print(p1)
+    print(p1)
+    print(p2)
