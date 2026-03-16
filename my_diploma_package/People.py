@@ -21,10 +21,13 @@ class Person:
 
         self.death_date = self.parse_date(death_date)
 
-        if self.death_date is None:
-            self.doa = 'живий'
-        else:
-            self.doa = 'dead'
+    def __str__(self):
+        gender_str = "чоловік" if self.gender == "m" else "жінка" if self.gender == "f" else "невідомо"
+        age = self.age()
+        birth = f"Народився {self.birth_date.strftime('%d.%m.%Y')}" if self.gender == "m" else f"Народилася {self.birth_date.strftime('%d.%m.%Y')}"
+        death = f"Помер: {self.death_date.strftime('%d.%m.%Y')}" if self.death_date and self.gender == "m" else f"Вмерла: {self.death_date.strftime('%d.%m.%Y')}" if self.death_date else ""
+        return f"{self.name} {self.surname} {self.father_name},{self.doa} {age} років, {gender_str}. {birth}. {death}"
+
 
     def age(self):
         if not self.birth_date:
@@ -52,6 +55,11 @@ class Person:
         except ValueError:
             return None
 
+    @property
+    def doa(self):
+        return "dead" if self.death_date else "alive"
+
+
 p1 = Person('Victor', 'Chupryna', '6.10.91', 'Oleksandrovych', )
 
 print(p1.birth_date)
@@ -59,3 +67,4 @@ print(p1.death_date)
 print(p1.doa)
 print(p1.gender)
 print(p1.age())
+print(p1)
