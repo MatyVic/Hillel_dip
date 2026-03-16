@@ -1,10 +1,11 @@
 from datetime import datetime
 
-def parse_date(date_str: str):
 
+def parse_date(date_str: str):
     if not date_str or date_str.strip() == "":
         return None
-    clean = date_str.strip().replace("/", ".").replace("-", ".").replace(" ", ".")
+    clean = (date_str.strip().replace("/", ".")
+             .replace("-", ".").replace(" ", "."))
     parts = clean.split(".")
     if len(parts) != 3:
         return None
@@ -15,28 +16,29 @@ def parse_date(date_str: str):
         return None
 
 
-class Human:
-    def __init__(self, name, surname, date_of_birth, gender, date_of_death = 0):
+class Person:
+    def __init__(self, name, surname, birth_date, father_name="",
+                 gender="", death_date=""):
+        if not name:
+            raise ValueError("Ім'я обов'язкове")
+        if not surname:
+            raise ValueError("Призвіще обов'язкове")
+
         self.name = name
         self.surname = surname
-        self.date_of_birth = parse_date(date_of_birth)
-        self.date_of_death = None if date_of_death == 0 else parse_date(str(date_of_death))
+        self.father_name = father_name
+        self.birth_date = parse_date(birth_date)
         self.gender = gender
-        self.gender = gender
-        self.status = "inactive" if date_of_death is None else "active"
+        self.death_date = parse_date(death_date)
 
-    # def __str__(self):
-    #     return {
-    #         "first_name": self.name,
-    #         "last_name": self.surname,
-    #         "birth_date": self.date_of_birth,
-    #         "death_date": self.date_of_death,
-    #         "status": self.status,
-    #         "gender": self.gender
-    #     }
+        if self.death_date is None:
+            self.doa = 'alive'
+        else:
+            self.doa = 'dead'
 
-first = Human('Ivan', 'Petrenko', '8 9 1998', 'm')
-print(first.date_of_birth)
-print(first.date_of_death)
 
-print(first.__dict__)
+p1 = Person('Victor', 'Chupryna', '6.10.1991', 'Oleksandrovych', 'm')
+
+print(p1.birth_date)
+print(p1.death_date)
+print(p1.doa)
