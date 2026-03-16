@@ -64,21 +64,12 @@ class Person:
     def get_age_str(age):
         if 11 <= age % 100 <= 14 or age % 10 == 0 or age % 10 >= 5:
             return "років"
-            # Другий за частотою: "роки"
         elif age % 10 in (2, 3, 4):
             return "роки"
-            # Найрідший: "рік"
         elif age % 10 == 1:
             return "рік"
+        return 'Шоо'
 
     @property
     def doa(self):
         return "dead" if self.death_date else "alive"
-
-
-if __name__ == '__main__':
-    p1 = Person('Victor', 'Chupryna', '6.10.91', 'Oleksandrovych', 'm')
-    p2 = Person('Evgeniia', 'Chupryna', '08/01/1949', 'Victor', 'f', '02/04/2017')
-
-    print(p1)
-    print(p2)
