@@ -2,7 +2,7 @@ from datetime import datetime, date
 
 
 class Person:
-    def __init__(self, name, surname, birth_date, father_name ="",
+    def __init__(self, name, surname, birth_date, father_name="",
                  gender="", death_date=""):
         if not name:
             raise ValueError("Ім'я обов'язкове")
@@ -35,15 +35,16 @@ class Person:
         age = self.age()
         death_str = ''
         if self.doa == "мертва":
-            death_str = "Помер" if self.gender == "м" else "Померла" if self.gender == "ж" else "Помер(ла)"
+            death_str = "Помер" if self.gender == "м" else "Померла"\
+                if self.gender == "ж" else "Помер(ла)"
+
             death_str += f" {self.death_date.strftime('%d.%m.%Y')}"
 
         result = (f"ФІО: {self.surname} {self.name} {self.father_name}, "
-                f"Стать: {gender_str}. "
-                f"Статус людини: {self.doa} "
-                f"{birth} - {death_str} "  
-                f"Вік: {age} {self.get_age_str(age)}. ")
-
+                  f"Стать: {gender_str}. "
+                  f"Статус людини: {self.doa} "
+                  f"{birth} - {death_str} "
+                  f"Вік: {age} {self.get_age_str(age)}. ")
 
         return result
 
@@ -52,7 +53,8 @@ class Person:
             return None
         end_date = self.death_date if self.death_date else date.today()
         years = end_date.year - self.birth_date.year
-        if (end_date.month, end_date.day) < (self.birth_date.month, self.birth_date.day):
+        if ((end_date.month, end_date.day) <
+                (self.birth_date.month, self.birth_date.day)):
             years -= 1
         return years
 
@@ -63,12 +65,19 @@ class Person:
         clean = (date_str.strip().replace("/", ".")
                  .replace("-", ".").replace(" ", "."))
         parts = clean.split(".")
+
         if len(parts) != 3:
             return None
         try:
-            day, month, year = map(int, parts)
+            if len(parts[0]) == 4:
+                year, month, day = map(int, parts)
+            else:
+                day, month, year = map(int, parts)
+
+            # якщо рік двозначний — корекція
             if year < 100:
                 year += 2000 if year < 30 else 1900
+
             return datetime(year, month, day).date()
         except ValueError:
             return None
