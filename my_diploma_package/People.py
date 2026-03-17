@@ -59,6 +59,17 @@ class Person:
                 f"{birth} - {death_str} "
                 f"Вік: {age} {self.get_age_str(age)}. ")
 
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "surname": self.surname,
+            "birth_date": str(self.birth_date),
+            "father_name": self.father_name,
+            "gender": self.gender,
+            "death_date": "" if self.death_date is None else str(self.death_date),
+        }
+
     def age(self):
         if not self.birth_date:
             return None

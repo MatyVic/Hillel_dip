@@ -3,7 +3,6 @@ import glob
 from my_diploma_package.db_new import Database
 from my_diploma_package.People import Person
 
-# створюємо один екземпляр бази
 db = Database("people.db")
 db.init_db()
 
@@ -56,18 +55,7 @@ def upload_person():
 def save_to_file():
     filename = input('Введіть назву файлу для збереження ') + '.json'
     result = db.get_all_persons()
-    people_list = []
-
-    for person in result:
-        person_dict = {
-            "name": person.name,
-            "surname": person.surname,
-            "birth_date": str(person.birth_date),
-            "father_name": person.father_name,
-            "gender": person.gender,
-            "death_date": "" if person.death_date is None else str(person.death_date),
-        }
-        people_list.append(person_dict)
+    people_list = [person.to_dict() for person in result]
 
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(people_list, f, ensure_ascii=False, indent=4)
