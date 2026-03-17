@@ -2,12 +2,12 @@ from datetime import datetime, date
 
 
 class Person:
-    def __init__(self, name, surname, birth_date, father_name="",
+    def __init__(self, name, surname, birth_date, father_name ="",
                  gender="", death_date=""):
         if not name:
             raise ValueError("Ім'я обов'язкове")
         if not surname:
-            raise ValueError("Призвіще обов'язкове")
+            raise ValueError("Прізвище обов'язкове")
 
         self.name = name
         self.surname = surname
@@ -15,24 +15,37 @@ class Person:
         self.birth_date = self.parse_date(birth_date)
 
         if gender == '':
-            self.gender = 'undefined'
+            self.gender = 'невизначена'
         else:
             self.gender = gender.lower()
 
         self.death_date = self.parse_date(death_date)
 
     def __str__(self):
-        gender_str = "чоловік" if self.gender == "m" \
-            else "жінка" if self.gender == "f" else "невідомо"
+        gender_str = "чоловік" if self.gender == "м" \
+            else "жінка" if self.gender == "ж" else "невідомо"
 
-        birth = f"Народився {self.birth_date.strftime('%d.%m.%Y')}" if self.gender == "m" else f"Народилася {self.birth_date.strftime('%d.%m.%Y')}"
+        gender_birth_map = {
+            "м": "Народився",
+            "ж": "Народилася"
+        }
+        birth_word = gender_birth_map.get(self.gender, "Дата народження")
+        birth = f"{birth_word} {self.birth_date.strftime('%d.%m.%Y')}"
+
         age = self.age()
         death_str = ''
-        if self.doa == "dead":
-            death_str = "Помер" if self.gender == "m" else "Вмерла" if self.gender == "f" else "Помер(ла)"
-            death_str += f' {self.death_date.strftime('%d.%m.%Y')}'
+        if self.doa == "мертва":
+            death_str = "Помер" if self.gender == "м" else "Померла" if self.gender == "ж" else "Помер(ла)"
+            death_str += f" {self.death_date.strftime('%d.%m.%Y')}"
 
-        return f"{self.name} {self.surname} {self.father_name},{age} {self.get_age_str(age)}, {gender_str}. {birth}. {death_str}"
+        result = (f"ФІО: {self.surname} {self.name} {self.father_name}, "
+                f"Стать: {gender_str}. "
+                f"Статус людини: {self.doa} "
+                f"{birth} - {death_str} "  
+                f"Вік: {age} {self.get_age_str(age)}. ")
+
+
+        return result
 
     def age(self):
         if not self.birth_date:
@@ -72,4 +85,4 @@ class Person:
 
     @property
     def doa(self):
-        return "dead" if self.death_date else "alive"
+        return "мертва" if self.death_date else "жива"
