@@ -1,11 +1,13 @@
 from my_diploma_package.db_new import Database
-from my_diploma_package.file_io import upload_person, save_to_file
+from my_diploma_package.file_io import FileStorage
 from my_diploma_package.People import Person
 from my_diploma_package.utils import validate_date, print_error
 import sys
 
 db = Database("people.db")
 db.init_db()
+
+storage = FileStorage(db)
 
 def add_new():
     name = input("Введіть ім'я: ").strip()
@@ -108,8 +110,8 @@ def del_person():
 
 menu_variants = {
     "1": add_new,
-    "2": upload_person,
-    "3": save_to_file,
+    "2": storage.upload_person,
+    "3": storage.save_to_file,
     "4": find_person,
     "5": edit_person,
     "6": del_person,
