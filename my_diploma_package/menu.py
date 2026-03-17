@@ -9,6 +9,7 @@ db.init_db()
 
 storage = FileStorage(db)
 
+
 def add_new():
     name = input("Введіть ім'я: ").strip()
     surname = input("Введіть прізвище: ").strip()
@@ -36,7 +37,8 @@ def add_new():
         print_error(e)
         return
 
-    new_id = db.add_person(name, surname, birth_date, father_name, gender, death_date)
+    new_id = db.add_person(name, surname, birth_date,
+                           father_name, gender, death_date)
     person.id = new_id
     print('Було додано нову людину у довідник - ', person)
     print('-----' * 50)
@@ -75,15 +77,30 @@ def edit_person():
 
     person_to_edit = result[int(choice) - 1]
 
-    new_name = input(f"Нове ім'я ({person_to_edit.name}): ").strip() or person_to_edit.name
-    new_surname = input(f"Нове прізвище ({person_to_edit.surname}): ").strip() or person_to_edit.surname
-    new_birth_date = input(f"Нова дата народження ({person_to_edit.birth_date}): ").strip() or person_to_edit.birth_date
-    new_father_name = input(f"Нове по батькові ({person_to_edit.father_name}): ").strip() or person_to_edit.father_name
-    new_gender = input(f"Нова стать ({person_to_edit.gender}): ").strip() or person_to_edit.gender
-    new_death_date = input(f"Нова дата смерті ({person_to_edit.death_date}): ").strip() or person_to_edit.death_date
+    new_name = (input(f"Нове ім'я ({person_to_edit.name}): ").strip()
+                or person_to_edit.name)
 
-    db.update_person(person_to_edit.id, new_name, new_surname, new_birth_date, new_father_name, new_gender, new_death_date)
-    print("Запис оновлено")
+    new_surname = (input(f"Нове прізвище ({person_to_edit.surname}): ").strip()
+                   or person_to_edit.surname)
+
+    new_birth_date = (input(f"Нова дата народження "
+                      f"({person_to_edit.birth_date}): ").strip()
+                      or person_to_edit.birth_date)
+
+    new_father_name = (input(f"Нове по батькові "
+                       f"({person_to_edit.father_name}): ").strip()
+                       or person_to_edit.father_name)
+
+    new_gender = (input(f"Нова стать ({person_to_edit.gender}): ").strip()
+                  or person_to_edit.gender)
+
+    new_death_date = input(f"Нова дата смерті ({person_to_edit.death_date}"
+                           f"): ").strip() or person_to_edit.death_date
+
+    db.update_person(person_to_edit.id, new_name, new_surname, new_birth_date,
+                     new_father_name, new_gender, new_death_date)
+
+    print("Запис", person_to_edit ,"оновлено" )
     print('-----' * 50)
 
 
