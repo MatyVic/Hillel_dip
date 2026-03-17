@@ -1,27 +1,32 @@
 import json
 import glob
-from my_diploma_package import db
+from my_diploma_package.db_new import Database
 from my_diploma_package.People import Person
 
-def upload_person():
+# створюємо один екземпляр бази
+db = Database("people.db")
+db.init_db()
 
+
+def upload_person():
     file_list = glob.glob("*.json")
     file_menu = {}
     print('Cписок існуючих файлів:')
-    for _, filename in enumerate(file_list, start=1):
-        file_menu[f"{_}"] = filename
-        print(_, '-',  filename)
+    for idx, filename in enumerate(file_list, start=1):
+        file_menu[str(idx)] = filename
+        print(idx, '-', filename)
 
     print('-----' * 50)
     ans = input('Оберіть файл ')
 
-    if not ans == '':
+    if ans and ans in file_menu:
         file_name = file_menu[ans]
     else:
         file_name = input('Введіть шлях до файла ')
 
     with open(file_name, "r", encoding="utf-8") as f:
         people = json.load(f)
+
     for p in people:
         try:
             person = Person(
@@ -44,12 +49,15 @@ def upload_person():
             print("Додано:", person)
         except ValueError as e:
             print("Помилка у даних:", e)
+
     print('-----' * 50)
+
 
 def save_to_file():
     filename = input('Введіть назву файлу для збереження ') + '.json'
     result = db.get_all_persons()
     people_list = []
+
     for person in result:
         person_dict = {
             "name": person.name,
@@ -57,11 +65,11 @@ def save_to_file():
             "birth_date": str(person.birth_date),
             "father_name": person.father_name,
             "gender": person.gender,
-            "death_date": (
-                "" if person.death_date is None else str(person.death_date)
-                ),
+            "death_date": "" if person.death_date is None else str(person.death_date),
         }
         people_list.append(person_dict)
 
     with open(filename, "w", encoding="utf-8") as f:
         json.dump(people_list, f, ensure_ascii=False, indent=4)
+
+    print(f"Дані збережено у файл {filename}")

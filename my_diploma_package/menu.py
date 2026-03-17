@@ -1,9 +1,11 @@
-from my_diploma_package import db
-from my_diploma_package.db import delete_person
+from my_diploma_package.db_new import Database
 from my_diploma_package.file_io import upload_person, save_to_file
 from my_diploma_package.People import Person
 from my_diploma_package.utils import validate_date, print_error
 import sys
+
+db = Database("people.db")
+db.init_db()
 
 def add_new():
     name = input("Введіть ім'я: ").strip()
@@ -53,13 +55,13 @@ def exit_program():
     print('Завершення роботи')
     sys.exit()
 
+
 def edit_person():
     search_str = input("Введіть строку пошуку для редагування: ").strip()
     result = db.search_person(search_str)
     if not result:
         print("Немає записів за вашим запитом")
         return
-
 
     for idx, person in enumerate(result, start=1):
         print(f"{idx}. {person}")
@@ -82,6 +84,7 @@ def edit_person():
     print("Запис оновлено")
     print('-----' * 50)
 
+
 def del_person():
     search_str = input("Введіть строку пошуку для видалення: ").strip()
     result = db.search_person(search_str)
@@ -98,10 +101,9 @@ def del_person():
         return
 
     person_to_delete = result[int(choice) - 1]
-    delete_person(person_to_delete.id)
+    db.delete_person(person_to_delete.id)
     print("Запис ", person_to_delete, "видалено")
     print('-----' * 50)
-
 
 
 menu_variants = {
